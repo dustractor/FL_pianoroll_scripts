@@ -1,0 +1,24 @@
+# vim: ft=python
+
+from flpianoroll import *
+
+note_ct = score.noteCount
+ppq = score.PPQ
+
+def createDialog():
+    form = ScriptDialog("Shave Selected","")
+    form.AddInputKnobInt("ticks",2,2,ppq)
+    return form
+
+def apply(form):
+    ticks = form.GetInputValue("ticks")
+
+    for n in range(note_ct):
+        xnote = score.getNote(n)
+        if xnote.selected:
+            new_time = xnote.time + ticks//2
+            new_length = xnote.length - ticks
+            xnote.time = new_time
+            xnote.length = new_length
+            
+
