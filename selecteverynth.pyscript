@@ -1,0 +1,36 @@
+# vim: ft=python
+from flpianoroll import *
+
+note_ct = score.noteCount
+
+def createDialog():
+    form = ScriptDialog("Select every nth note","")
+    form.AddInputKnobInt("nth",2,2,64)
+    return form
+
+def apply(form):
+    nth = form.GetInputValue("nth")
+    times = set()
+
+    for n in range(note_ct):
+        xnote = score.getNote(n)
+        times.add(xnote.time)
+
+
+    goodtimes = list()
+
+    for n,t in enumerate(sorted(list(times))):
+        if (n % nth) == 0:
+            goodtimes.append(t)
+
+    goodnotes = list()
+
+    for n in range(note_ct):
+        xnote = score.getNote(n)
+        if xnote.time in goodtimes:
+            goodnotes.append(n)
+
+    for n in goodnotes:
+        xnote = score.getNote(n)
+        xnote.selected = True
+
