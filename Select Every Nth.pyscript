@@ -2,35 +2,57 @@
 from flpianoroll import *
 
 note_ct = score.noteCount
+color_options = ["None"]
+color_options.extend(["Color %d"%(_+1) for _ in range(16)])
 
 def createDialog():
     form = ScriptDialog("Select every nth note","")
-    form.AddInputKnobInt("nth",2,2,64)
+    form.AddInputCombo("Color Restrict",color_options,0)
+    form.AddInputKnobInt("Nth1",2,2,64)
+    form.AddInputKnobInt("Nth2",2,2,64)
+    form.AddInputKnobInt("Nth3",2,2,64)
     return form
 
 def apply(form):
-    nth = form.GetInputValue("nth")
+    color_restrict = form.GetInputValue("Color Restrict")
+    nth1 = form.GetInputValue("Nth1")
+    nth2 = form.GetInputValue("Nth2")
+    nth3 = form.GetInputValue("Nth3")
+    nths = set()
+    nths.add(nth1)
+    if nth2 > 2:
+        nths.add(nth2)
+    if nth3 > 2:
+        nths.add(nth3)
+    color_restrict -= 1
+
     times = set()
-
-    for n in range(note_ct):
-        xnote = score.getNote(n)
-        times.add(xnote.time)
-
-
     goodtimes = list()
-
-    for n,t in enumerate(sorted(list(times))):
-        if (n % nth) == 0:
-            goodtimes.append(t)
-
     goodnotes = list()
 
     for n in range(note_ct):
         xnote = score.getNote(n)
+        if color_restrict > -1:
+            if xnote.color == color_restrict:
+                times.add(xnote.time)
+        else:
+            times.add(xnote.time)
+
+    for n,t in enumerate(sorted(list(times))):
+        for nth in nths:
+            if (n % nth) == 0:
+                goodtimes.append(t)
+
+    for n in range(note_ct):
+        xnote = score.getNote(n)
         if xnote.time in goodtimes:
-            goodnotes.append(n)
+            if color_restrict > -1:
+                if xnote.color == color_restrict:
+                    goodnotes.append(n)
+            else:
+                goodnotes.append(n)
 
     for n in goodnotes:
         xnote = score.getNote(n)
-        xnote.selected = True
+        xnote.selected = not xnote.selected
 
