@@ -1,0 +1,47 @@
+# vim: ft=python
+
+from flpianoroll import *
+
+note_ct = score.noteCount
+color_options = ["None"]
+color_options.extend(["Color %d"%(_+1) for _ in range(16)])
+
+def createDialog():
+    form = ScriptDialog("Chord Select","")
+    form.AddInputCombo("Color Restrict",color_options,0)
+    return form
+
+def apply(form):
+    color_restrict = form.GetInputValue("Color Restrict") - 1
+    notes = list()
+    times = set()
+
+    for n in range(note_ct):
+        xnote = score.getNote(n)
+        if color_restrict > -1:
+            if xnote.color == color_restrict:
+                notes.append(xnote)
+        else:
+            notes.append(xnote)
+
+    for n in notes:
+        times.add(n.time)
+
+    time_d = {t:0 for t in times}
+
+    for n in notes:
+        time_d[n.time] += 1
+
+    chord_times = list()
+
+    for k,v in time_d.items():
+        if v > 1:
+            chord_times.append(k)
+
+    for n in notes:
+        if n.time in chord_times:
+            n.selected = True
+
+
+
+
