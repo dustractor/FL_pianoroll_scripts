@@ -10,3 +10,7 @@ Like the built in function select odd but that one only cares about the grid and
 # Shave
 
 Shaves both ends of notes by a small amount. I use a certain midi plugin that doesn't re-trigger notes if they are legato. It also behaves better if the notes are slightly behind the beat. This script shortens the notes by a few pulses and shifts them forward. When the notes come out the other end of the midi plugin I can always just quantize them back.
+
+# chordselect
+
+Select chords.  Optionally, select only chords of a given color.
