@@ -11,6 +11,7 @@ def createDialog():
     form.AddInputKnobInt("Nth1",2,2,64)
     form.AddInputKnobInt("Nth2",2,2,64)
     form.AddInputKnobInt("Nth3",2,2,64)
+    form.AddInputKnobInt("Offset",0,0,64)
     return form
 
 def apply(form):
@@ -18,6 +19,7 @@ def apply(form):
     nth1 = form.GetInputValue("Nth1")
     nth2 = form.GetInputValue("Nth2")
     nth3 = form.GetInputValue("Nth3")
+    offset = form.GetInputValue("Offset")
     nths = set()
     nths.add(nth1)
     if nth2 > 2:
@@ -40,7 +42,7 @@ def apply(form):
 
     for n,t in enumerate(sorted(list(times))):
         for nth in nths:
-            if (n % nth) == 0:
+            if ((n - offset) % nth) == 0:
                 goodtimes.append(t)
 
     for n in range(note_ct):
