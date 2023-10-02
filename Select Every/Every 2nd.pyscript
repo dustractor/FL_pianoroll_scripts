@@ -1,0 +1,28 @@
+# vim: ft=python
+from flpianoroll import *
+
+note_ct = score.noteCount
+
+nth = 2
+
+times = set()
+goodtimes = list()
+goodnotes = list()
+
+for n in range(note_ct):
+    xnote = score.getNote(n)
+    times.add(xnote.time)
+
+for n,t in enumerate(sorted(list(times))):
+    if (n % nth) == 0:
+        goodtimes.append(t)
+
+for n in range(note_ct):
+    xnote = score.getNote(n)
+    if xnote.time in goodtimes:
+        goodnotes.append(n)
+
+for n in goodnotes:
+    xnote = score.getNote(n)
+    xnote.selected = not xnote.selected
+
